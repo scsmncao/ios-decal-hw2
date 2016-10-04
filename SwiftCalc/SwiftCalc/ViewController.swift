@@ -21,7 +21,10 @@ class ViewController: UIViewController {
     
     // TODO: This looks like a good place to add some data structures.
     //       One data structure is initialized below for reference.
-    var someDataStructure: [String] = [""]
+    var operands: [String] = []
+    var operators: [String] = []
+    var isOperator = false
+    var isEquals = false
     
 
     override func viewDidLoad() {
@@ -47,12 +50,65 @@ class ViewController: UIViewController {
     //       Modify this one or create your own.
     func updateSomeDataStructure(_ content: String) {
         print("Update me like one of those PCs")
+        switch content {
+        case "+", "/", "*", "-":
+            operators.append(content)
+            operands.append(resultLabel.text!)
+            print("update data structure operators \(operators)")
+            if (operators.count > 1) {
+                let b = operands.removeLast()
+                let a = operands.removeLast()
+                let operation = operators.removeLast()
+                let result = intCalculate(a: Int(a)!, b: Int(b)!, operation: operation)
+                resultLabel.text = String(result)
+                updateSomeDataStructure(String(result))
+            }
+        case "=":
+            operands.append(resultLabel.text!)
+        case "C":
+            operands.removeAll()
+            operators.removeAll()
+            updateResultLabel("0")
+        default:
+            if (isEquals) {
+                operands.removeAll()
+                operators.removeAll()
+                isEquals = false
+            }
+            operands.append(content)
+        }
     }
     
     // TODO: Ensure that resultLabel gets updated.
     //       Modify this one or create your own.
     func updateResultLabel(_ content: String) {
         print("Update me like one of those PCs")
+        switch content {
+        case "C", "=":
+            resultLabel.text = "0"
+        case "+/-":
+            if ((resultLabel.text!.characters.count) < 7) {
+                if (resultLabel.text! != "0") {
+                    if (resultLabel.text![resultLabel.text!.startIndex] == "-") {
+                        resultLabel.text!.remove(at: resultLabel.text!.startIndex)
+                    }
+                    else {
+                    resultLabel.text = "-" + resultLabel.text!
+                    }
+                }
+            }
+        default:
+            if ((resultLabel.text!.characters.count) < 7) {
+                if (resultLabel.text == "0" || isOperator || isEquals) {
+                    isOperator = false
+                    isEquals = false
+                    resultLabel.text = content
+                }
+                else {
+                    resultLabel.text! += content
+                }
+            }
+        }
     }
     
     
@@ -66,7 +122,20 @@ class ViewController: UIViewController {
     //       Modify this one or create your own.
     func intCalculate(a: Int, b:Int, operation: String) -> Int {
         print("Calculation requested for \(a) \(operation) \(b)")
-        return 0
+        var result = 0
+        switch operation {
+        case "+":
+            result = a + b
+        case "-":
+            result = a - b
+        case "/":
+            result = a / b
+        case "*":
+            result = a * b
+        default:
+            break
+        }
+        return result
     }
     
     // TODO: A general calculate method for doubles
@@ -81,16 +150,60 @@ class ViewController: UIViewController {
         guard Int(sender.content) != nil else { return }
         print("The number \(sender.content) was pressed")
         // Fill me in!
+        updateResultLabel(sender.content)
     }
     
     // REQUIRED: The responder to an operator button being pressed.
     func operatorPressed(_ sender: CustomButton) {
         // Fill me in!
+        print("Operator \(sender.content) was pressed")
+        let content = sender.content
+        switch content {
+        case "C":
+            updateResultLabel(content)
+            updateSomeDataStructure(content)
+        case "+", "/", "*", "-":
+            isOperator = true
+            isEquals = false
+            updateSomeDataStructure(content)
+        case "+/-":
+            updateResultLabel(content)
+        case "=":
+            isEquals = true
+            if (isOperator) {
+                operators.removeLast()
+                isOperator = false
+            }
+            if (operators.count < 1) {
+                break
+            }
+            updateSomeDataStructure(content)
+            updateResultLabel(content)
+            let b = operands.removeLast()
+            let a = operands.removeLast()
+            let operation = operators.removeLast()
+            let result = intCalculate(a: Int(a)!, b: Int(b)!, operation: operation)
+            updateResultLabel(String(result))
+            updateSomeDataStructure(String(result))
+            print("operands left \(operands)")
+            print("operators left \(operators)")
+        default:
+            break
+        }
+
     }
     
     // REQUIRED: The responder to a number or operator button being pressed.
     func buttonPressed(_ sender: CustomButton) {
        // Fill me in!
+        let content = sender.content
+        switch content {
+        case "0":
+            updateResultLabel(content)
+            updateSomeDataStructure(content)
+        default:
+            updateResultLabel(content)
+        }
     }
     
     // IMPORTANT: Do NOT change any of the code below.
