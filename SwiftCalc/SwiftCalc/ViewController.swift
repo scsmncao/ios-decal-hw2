@@ -52,10 +52,13 @@ class ViewController: UIViewController {
         print("Update me like one of those PCs")
         switch content {
         case "+", "/", "*", "-":
-            operators.append(content)
-            operands.append(resultLabel.text!)
-            print("update data structure operators \(operators)")
-            if (operators.count > 1) {
+            if (isOperator) {
+                operators.removeLast()
+            }
+            else {
+                operands.append(resultLabel.text!)
+            }
+            if ((operators.count + 1) > 1) {
                 let b = operands.removeLast()
                 let a = operands.removeLast()
                 let operation = operators.removeLast()
@@ -63,6 +66,9 @@ class ViewController: UIViewController {
                 resultLabel.text = String(result)
                 updateSomeDataStructure(String(result))
             }
+            operators.append(content)
+            isOperator = true
+            print("update data structure operators \(operators)")
         case "=":
             operands.append(resultLabel.text!)
         case "C":
@@ -75,7 +81,9 @@ class ViewController: UIViewController {
                 operators.removeAll()
                 isEquals = false
             }
-            operands.append(content)
+            if (resultLabel.text != "0" && content != "0") {
+                operands.append(content)
+            }
         }
     }
     
@@ -163,7 +171,6 @@ class ViewController: UIViewController {
             updateResultLabel(content)
             updateSomeDataStructure(content)
         case "+", "/", "*", "-":
-            isOperator = true
             isEquals = false
             updateSomeDataStructure(content)
         case "+/-":
