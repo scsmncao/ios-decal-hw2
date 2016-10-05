@@ -110,10 +110,20 @@ class ViewController: UIViewController {
             }
         default:
             if ((resultLabel.text!.characters.count) < 7) {
+                if (content == "." && !isOperator) {
+                    if (resultLabel.text!.range(of: ".") != nil) {
+                        break
+                    }
+                }
                 if (resultLabel.text == "0" || isOperator || isEquals) {
                     isOperator = false
                     isEquals = false
-                    resultLabel.text = content
+                    if (content == ".") {
+                        resultLabel.text = "0" + content
+                    }
+                    else {
+                        resultLabel.text = content
+                    }
                 }
                 else {
                     resultLabel.text! += content
