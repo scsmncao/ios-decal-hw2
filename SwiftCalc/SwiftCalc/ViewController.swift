@@ -62,18 +62,21 @@ class ViewController: UIViewController {
                 let b = operands.removeLast()
                 let a = operands.removeLast()
                 let operation = operators.removeLast()
-                let result = intCalculate(a: Int(a)!, b: Int(b)!, operation: operation)
-                resultLabel.text = String(result)
-                updateSomeDataStructure(String(result))
+                let result = calculate(a: a, b: b, operation: operation).prettyOutput
+                isOperator = true
+                updateResultLabel(result)
+                updateSomeDataStructure(result)
             }
-            operators.append(content)
             isOperator = true
+            operators.append(content)
             print("update data structure operators \(operators)")
         case "=":
             operands.append(resultLabel.text!)
         case "C":
             operands.removeAll()
             operators.removeAll()
+            isEquals = false
+            isOperator = false
             updateResultLabel("0")
         default:
             if (isEquals) {
@@ -150,7 +153,22 @@ class ViewController: UIViewController {
     //       Modify this one or create your own.
     func calculate(a: String, b:String, operation: String) -> Double {
         print("Calculation requested for \(a) \(operation) \(b)")
-        return 0.0
+        let a = Double(a)!
+        let b = Double(b)!
+        var result = 0.0
+        switch operation {
+        case "+":
+            result = a + b
+        case "-":
+            result = a - b
+        case "/":
+            result = a / b
+        case "*":
+            result = a * b
+        default:
+            break
+        }
+        return result
     }
     
     // REQUIRED: The responder to a number button being pressed.
@@ -173,7 +191,7 @@ class ViewController: UIViewController {
         case "+", "/", "*", "-":
             isEquals = false
             updateSomeDataStructure(content)
-        case "+/-":
+        case "+/-", ".":
             updateResultLabel(content)
         case "=":
             isEquals = true
@@ -189,9 +207,9 @@ class ViewController: UIViewController {
             let b = operands.removeLast()
             let a = operands.removeLast()
             let operation = operators.removeLast()
-            let result = intCalculate(a: Int(a)!, b: Int(b)!, operation: operation)
-            updateResultLabel(String(result))
-            updateSomeDataStructure(String(result))
+            let result = calculate(a: a, b: b, operation: operation).prettyOutput
+            updateResultLabel(result)
+            updateSomeDataStructure(result)
             print("operands left \(operands)")
             print("operators left \(operators)")
         default:

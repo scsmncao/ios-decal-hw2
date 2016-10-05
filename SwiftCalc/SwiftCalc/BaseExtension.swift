@@ -32,7 +32,25 @@ extension Double {
             3. Display an integer when the result is an integer of allowable size.
             Optional: Use scientific notation for any values that exceed the character max.
         */
-        return "\(self)"
+        var doubleString = String(self)
+        if (doubleString.characters.count > 7) {
+            return self.scientificStyle
+        }
+        let indexFromDecimal = doubleString.range(of: ".")?.lowerBound
+        print(indexFromDecimal)
+        let restOfString = doubleString.substring(from: indexFromDecimal!)
+        print(restOfString)
+        var isInt = true
+        print(doubleString)
+        for character in restOfString.characters {
+            if (character != "0" && character != ".") {
+                isInt = false
+            }
+        }
+        if (isInt) {
+            return doubleString.substring(to: indexFromDecimal!)
+        }
+        return doubleString
     }
 }
 
