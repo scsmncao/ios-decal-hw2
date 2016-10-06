@@ -34,12 +34,14 @@ extension Double {
         */
         var doubleString = String(self)
         if (doubleString.characters.count > 7) {
-            return self.scientificStyle
+            let scientificString = self.scientificStyle
+            if (scientificString.characters.count > 7) {
+                return "9.99e99"
+            }
+            return scientificString
         }
         let indexFromDecimal = doubleString.range(of: ".")?.lowerBound
-        print(indexFromDecimal)
         let restOfString = doubleString.substring(from: indexFromDecimal!)
-        print(restOfString)
         var isInt = true
         print(doubleString)
         for character in restOfString.characters {

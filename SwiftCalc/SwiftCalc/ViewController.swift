@@ -109,7 +109,7 @@ class ViewController: UIViewController {
                 }
             }
         default:
-            if ((resultLabel.text!.characters.count) < 7) {
+            if ((resultLabel.text!.characters.count) < 7 || isOperator || isEquals) {
                 if (content == "." && !isOperator) {
                     if (resultLabel.text!.range(of: ".") != nil) {
                         break
@@ -284,6 +284,7 @@ class ViewController: UIViewController {
             frame: CGRect(x: x, y: y, width: buttonWidth, height: buttonHeight)) { element in
                 guard let button = element as? UIButton else { return }
                 button.addTarget(self, action: #selector(operatorPressed), for: .touchUpInside)
+                button.showsTouchWhenHighlighted = true
             }
         }
         // MARK: Second Row 3x3
@@ -294,6 +295,7 @@ class ViewController: UIViewController {
             frame: CGRect(x: x, y: y+101.0, width: buttonWidth, height: buttonHeight)) { element in
                 guard let button = element as? UIButton else { return }
                 button.addTarget(self, action: #selector(numberPressed), for: .touchUpInside)
+                button.showsTouchWhenHighlighted = true
             }
         }
         // MARK: Vertical Column of Operators
@@ -306,6 +308,7 @@ class ViewController: UIViewController {
                 button.backgroundColor = UIColor.orange
                 button.setTitleColor(UIColor.white, for: .normal)
                 button.addTarget(self, action: #selector(operatorPressed), for: .touchUpInside)
+                button.showsTouchWhenHighlighted = true
             }
         }
         // MARK: Last Row for big 0 and .
@@ -316,6 +319,7 @@ class ViewController: UIViewController {
             frame: CGRect(x: x, y: 405, width: myWidth, height: buttonHeight)) { element in
                 guard let button = element as? UIButton else { return }
                 button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+                button.showsTouchWhenHighlighted = true
             }
         }
     }
