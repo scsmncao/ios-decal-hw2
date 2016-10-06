@@ -108,6 +108,8 @@ class ViewController: UIViewController {
                     }
                 }
             }
+        case "%":
+            resultLabel.text = calculate(a: resultLabel.text!, b: "100", operation: "/").prettyOutput
         default:
             if ((resultLabel.text!.characters.count) < 7 || isOperator || isEquals) {
                 if (content == "." && !isOperator) {
@@ -172,7 +174,20 @@ class ViewController: UIViewController {
         case "-":
             result = a - b
         case "/":
-            result = a / b
+            if (b == 0) {
+                let alert = UIAlertController(title: "Divide by 0", message: "Cannot Divide by 0", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                operands.removeAll()
+                operators.removeAll()
+                isEquals = false
+                isOperator = false
+                updateResultLabel("0")
+                break
+            }
+            else {
+                result = a / b
+            }
         case "*":
             result = a * b
         default:
@@ -202,6 +217,8 @@ class ViewController: UIViewController {
             isEquals = false
             updateSomeDataStructure(content)
         case "+/-", ".":
+            updateResultLabel(content)
+        case "%":
             updateResultLabel(content)
         case "=":
             isEquals = true
